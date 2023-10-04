@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
 import tmdbApi from '../../api/tmdbApi';
 import apiConfig from '../../api/apiConfig';
@@ -9,12 +9,19 @@ import CastList from './CastList';
 import VideoList from './VideoList';
 
 import MovieList from '../../components/movie-list/MovieList';
+import { likes } from '../../api/PostApiService';
+import { useAuth } from '../AuthContext';
 
 const Detail = () => {
 
     const { category, id } = useParams();
 
     const [item, setItem] = useState(null);
+
+    const authContext = useAuth()
+    const isAuthenticated = authContext.isAuthenticated
+    
+    
 
     useEffect(() => {
         const getDetail = async () => {
@@ -24,6 +31,17 @@ const Detail = () => {
         }
         getDetail();
     }, [category, id]);
+
+
+    function likeIt(id){
+        const response = likes(category, id)
+        if(response.status == 200)
+        {   // 좋아요 등록은 잘 됨 그에 대한 반응 페이지 제작 필요
+            console.log("좋아요 등록 완료")
+        }else{ //좋아요 실패시 500 코드 전송 그에 대한 대응 페이지 제작 필요
+            console.log("좋아요 등록 실패")
+        }
+    }
 
     return (
         <>
@@ -40,6 +58,7 @@ const Detail = () => {
                                     {item.title || item.name}
                                 </h1>
                                 <div className="genres">
+                                    {isAuthenticated && <button onClick={() => likeIt(item.id)}>LikeIt!</button>}
                                     {
                                         item.genres && item.genres.slice(0, 5).map((genre, i) => (
                                             <span key={i} className="genres__item">{genre.name}</span>

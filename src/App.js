@@ -12,6 +12,7 @@ import Catalog from './pages/Catalog';
 import Detail from './pages/detail/Detail';
 import LoginComponent from './pages/LoginComponent';
 import AuthProvider, { useAuth } from './pages/AuthContext';
+import SignupForm from './pages/Register';
 
 
 
@@ -46,7 +47,6 @@ function App() {
                         element={<>
                         <Header />
                         <Detail />
-                        <Footer />
                         </>}
                     />
                     <Route
@@ -71,6 +71,13 @@ function App() {
                         <LoginComponent />
                         </>}
                     />
+
+                    <Route
+                        path='/register'
+                        element={<>
+                        <SignupForm />
+                        </>}
+                    />                    
                 </Routes>
             </BrowserRouter>
       </AuthProvider>
