@@ -18,6 +18,10 @@ const Detail = () => {
 
     const [item, setItem] = useState(null);
 
+    const [successMessage, setSuccessMessage] = useState('');
+    const [errorMessage, setErrorMessage] = useState('');
+
+
     const authContext = useAuth()
     const isAuthenticated = authContext.isAuthenticated
     
@@ -33,14 +37,22 @@ const Detail = () => {
     }, [category, id]);
 
 
-    function likeIt(id){
-        const response = likes(category, id)
-        if(response.status == 200)
-        {   // 좋아요 등록은 잘 됨 그에 대한 반응 페이지 제작 필요
-            console.log("좋아요 등록 완료")
-        }else{ //좋아요 실패시 500 코드 전송 그에 대한 대응 페이지 제작 필요
-            console.log("좋아요 등록 실패")
-        }
+    async function likeIt(id){
+        try {
+            const response = await likes(category, id)
+            // 성공적인 응답 처리
+            setSuccessMessage('좋아요 등록 완료!'); // 성공 메시지 설정
+
+          } catch (error) {
+            if (error.response) {
+              // 서버 응답에서 에러 메시지 추출
+              const errorData = error.response.data;
+              setErrorMessage(errorData);
+            } else {
+              // 네트워크 에러 또는 다른 예외 처리
+              setErrorMessage('서버와 통신 중 문제가 발생했습니다.');
+            }
+          }
     }
 
     return (
@@ -57,6 +69,8 @@ const Detail = () => {
                                 <h1 className="title">
                                     {item.title || item.name}
                                 </h1>
+                                {errorMessage && <div className='error-message'>{errorMessage}</div>}
+                                {!errorMessage && successMessage && <div className="success-message">{successMessage}</div>}
                                 <div className="genres">
                                     {isAuthenticated && <button onClick={() => likeIt(item.id)}>LikeIt!</button>}
                                     {

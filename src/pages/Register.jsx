@@ -46,6 +46,7 @@ function SignupForm() {
     } catch (error) {
       console.error('회원가입 실패:', error);
       // 실패 시 처리를 구현합니다.
+      // 어떤 이유로 회원가입이 실패했는 지 에러메세지 노출시켜야 함
     }
   };
 
